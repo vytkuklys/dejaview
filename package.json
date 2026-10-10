@@ -1,0 +1,49 @@
+{
+  "name": "dejaview-mcp",
+  "version": "0.0.1",
+  "description": "MCP server that gives AI coding agents a small, fixed visual vocabulary. The agent sends compact JSON; DejaView renders a fixed template. Ships sequence diagrams.",
+  "type": "module",
+  "bin": {
+    "dejaview": "dist/server.js"
+  },
+  "files": [
+    "dist/",
+    "templates/",
+    "README.md",
+    "LICENSE",
+    "SECURITY.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "mcp",
+    "claude-code",
+    "visualization",
+    "diagrams",
+    "ai-agents"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vytkuklys/dejaview.git"
+  },
+  "homepage": "https://github.com/vytkuklys/dejaview#readme",
+  "bugs": {
+    "url": "https://github.com/vytkuklys/dejaview/issues"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "node --import tsx --test test/*.test.ts",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.130",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
