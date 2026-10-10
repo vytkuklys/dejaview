@@ -1,0 +1,37 @@
+name: Release
+
+# Stages a new npm version when a GitHub release is published (tag it vX.Y.Z to
+# match package.json). Uses npm trusted publishing (OIDC): no npm token is stored.
+# The trusted publisher is only allowed to stage, so nothing goes live until a
+# maintainer approves it with 2FA: `npm stage list dejaview-mcp`, then
+# `npm stage approve <stage-id>`, or approve it on npmjs.com.
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: npm
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - name: Check tag matches package.json version
+        run: |
+          version="v$(node -p "require('./package.json').version")"
+          if [ "$version" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json $version" >&2
+            exit 1
+          fi
+      # npm stage needs npm >= 11.21, newer than the npm bundled with Node 24.
+      - run: npm install -g npm@11.21.0
+      - run: npm ci
+      # prepublishOnly runs build and tests before staging.
+      - run: npm stage publish
